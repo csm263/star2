@@ -3,8 +3,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import streamlit as st
 from datetime import datetime
+
 # 1) Secrets에서 순수 JSON 문자열(str) 꺼내기
-json_content = st.secrets["gcp_service_account_json"]  # 이제 이 변수에 실질적인 JSON 문자열이 담깁니다.
+json_content = st.secrets["gcp_service_account_json"]
 
 # 2) /tmp/gcp_key.json 파일로 저장하고 환경 변수 지정
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_key.json"
@@ -20,7 +21,7 @@ SPREADSHEET_NAME = "이오스 쎈엽합 점수시트"
 SHEET_NAME = "점수내역"
 sheet = client.open(SPREADSHEET_NAME).worksheet(SHEET_NAME)
 
-# 3) Streamlit UI
+# 4) Streamlit UI
 st.set_page_config(page_title="결사부대원 입력", layout="centered")
 st.title("📋 결사부대원 입력 및 저장")
 
@@ -31,7 +32,8 @@ members_input = st.text_area(
     "결사부대원 분대 1\n"
     "홍길동 32분대\n"
     "김철수 32분대\n"
-    "…\n"
+    "…\n",
+    height=300
 )
 if not members_input.strip():
     st.info("결사부대원 목록을 입력하면, 아래에서 장소 선택 UI가 표시됩니다.")
@@ -40,14 +42,17 @@ if not members_input.strip():
 members_lines = members_input.splitlines()
 결사부대원_목록 = []
 is_member_section = False
+
 for line in members_lines:
     if line.startswith("결사부대원 분대"):
         is_member_section = True
         continue
     if is_member_section and line.strip():
         parts = line.split()
-        # “홍길동 32분대” → parts[0]에 “홍길동”이 들어왔다고 가정
-        결사부대원_목록.append(parts[0])
+        # 마지막 토큰이 “아이디”가 되도록 가져옵니다.
+        if len(parts) >= 2:
+            이름 = parts[-1]
+            결사부대원_목록.append(이름)
 
 if not 결사부대원_목록:
     st.error("❗ 제대로 된 결사부대원 목록이 감지되지 않았습니다. 다시 확인해 주세요.")
