@@ -1,17 +1,17 @@
 import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from datetime import datetime
 import streamlit as st
 
-# 1) 서비스 계정 JSON 가져오기
-json_content = st.secrets["gcp_service_account_json"]
-# /tmp 폴더에 파일로 쓰고, 환경 변수로 지정
+# 1) Secrets에서 순수 JSON 문자열(str) 꺼내기
+json_content = st.secrets["gcp_service_account_json"]  # 이제 이 변수에 실질적인 JSON 문자열이 담깁니다.
+
+# 2) /tmp/gcp_key.json 파일로 저장하고 환경 변수 지정
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_key.json"
 with open("/tmp/gcp_key.json", "w", encoding="utf-8") as f:
     f.write(json_content)
 
-# 2) Google Sheets 인증
+# 3) Google Sheets 인증
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds = ServiceAccountCredentials.from_json_keyfile_name("/tmp/gcp_key.json", scope)
 client = gspread.authorize(creds)
