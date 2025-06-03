@@ -2,7 +2,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import streamlit as st
-
+from datetime import datetime
 # 1) Secrets에서 순수 JSON 문자열(str) 꺼내기
 json_content = st.secrets["gcp_service_account_json"]  # 이제 이 변수에 실질적인 JSON 문자열이 담깁니다.
 
