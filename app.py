@@ -129,13 +129,3 @@ if 선택된장소:
     st.stop()
 
 st.warning("아직 장소를 선택하지 않았습니다. 위 버튼 중 하나를 눌러주세요!")
-
-# 📄 스펙조사 버튼
-def open_google_form():
-    url = "https://forms.gle/B5nsHGkMin1BLC9r5"  # ← 여기에 설문 링크 입력
-    webbrowser.open(url)
-
-tk.Button(root, text="📋 스펙조사 설문지 열기", command=open_google_form, bg="lightblue").pack(pady=20)
-
-# 앱 실행
-root.mainloop()
